@@ -1,0 +1,1485 @@
+// ==UserScript==
+// @nimi KRUNKER.IO AIMBOT, XRAY, SPINBOT, WIREFRAME, FOV BOX JA 3. PERSONA DOGEWARE:lta
+// @namespace http://tampermonkey.net/
+// @versio 1.3
+// @description Krunkerin Mod Menu Aimbot tähtää lähimpään NÄKYVÄÄN pelaajaan. Säädä tasoitus tarkkuutta varten. Käytä Xraytä nähdäksesi seinien läpi, teräsrunkoa pelaajille ja maailmalle ja paljon muuta
+// @author DOGEWARE
+// @match *://krunker.io/*
+// @match *://browserfps.com/*
+// @sulje pois *://krunker.io/social*
+// @exclude *://krunker.io/editor*
+// @icon https://media.giphy.com/media/CxYGmxv0Oyz4I/giphy.gif
+// @grant none
+// @require https://unpkg.com/three@0.150.0/build/three.min.js
+// @antifeature-mainokset
+// @downloadURL https://update.greasyfork.org/scripts/491124/KRUNKERIO%20AIMBOT%2C%20XRAY%2C%20SPINBOT%2C%20WIREFRAME%2C%20FOV%20BOX%2C%20AND%203RD%2 20DOGEWARE.user.js
+// @updateURL https://update.greasyfork.org/scripts/491124/KRUNKERIO%20AIMBOT%2C%20XRAY%2C%20SPINBOT%2C%20WIREFRAME%2C%20FOV%20BOX%2C%20AND%BY%203%0 20DOGEWARE.meta.js
+// ==/UserScript==
+
+const KOLME = window.THREE;
+function showPopup(viesti) {
+    var popupContainer = document.createElement('div')
+    popupContainer.style.position = 'korjattu'
+    popupContainer.style.top = '0'
+    popupContainer.style.left = '0'
+    popupContainer.style.width = '100 %'
+    popupContainer.style.backgroundColor = '#333'
+    popupContainer.style.color = '#fff'
+    popupContainer.style.padding = '10px'
+    popupContainer.style.textAlign = 'keskus'
+    popupContainer.style.zIndex = '9999'
+
+    var textElement = document.createElement('div')
+    textElement.textContent = viesti
+    textElement.style.fontSize = '18px'
+    textElement.style.color = '#fff'
+    textElement.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+
+    var buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'inline-block';
+
+    var button1 = document.createElement('button');
+    button1.textContent = 'Hanki 24 tunnin avain';
+    button1.style.padding = '5px 10px';
+    button1.style.backgroundColor = '#ff6600';
+    button1.style.border = 'ei mitään';
+    button1.style.borderRadius = '5px';
+    button1.style.color = '#fff';
+    button1.style.cursor = 'osoitin';
+    button1.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+    buttonContainer.appendCild(painike1);
+    button1.addEventListener('click', function() {
+        window.open("https://dogescripts.pages.dev/script/key-unlock?script4key=krunker.io&reviewscript=491124-krunker-io-aimbot-xray-spinbot-wireframe-fov-box-and-3rd-person -by-dogeware");
+    });
+    var closeButton = document.createElement('button');
+    closeButton.textContent = 'Sulje';
+    closeButton.style.padding = '5px 10px';
+    closeButton.style.backgroundColor = '#ff6600';
+    closeButton.style.border = 'ei mitään';
+    closeButton.style.borderRadius = '5px';
+    closeButton.style.color = '#fff';
+    closeButton.style.cursor = 'osoitin';
+    closeButton.style.marginLeft = '10px';
+    closeButton.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+
+    closeButton.addEventListener('click', function() {
+        document.body.removeChild(popupContainer);
+    });
+
+    popupContainer.appendChild(textElement);
+    popupContainer.appendChild(buttonContainer);
+    popupContainer.appendChild(closeButton);
+
+    document.body.appendChild(popupContainer);
+}
+
+const alertMsg = `
+🚀 On aika ottaa virtaa! 🚀
+
+Huomio! 📣 Tämän skriptin käyttö edellyttää nyt ainutlaatuista lisenssiavaimemme aktivointia varten. 🛡️ Varmista omasi nyt käymällä virallisella sivullamme osoitteessa dogescripts.pages.dev. Se on nopeaa ja helppoa, vie vain muutaman sekunnin. Muista, että tämä prosessi on suoritettava noin kahdesti päivässä, jotta asiat sujuvat sujuvasti. Nostetaan tasoa yhdessä! 💪
+
+🫷 Mainokset onClick (Popunder) Jos sinut ohjataan uudelleen, sulje sivu👍
+`;
+
+const urlParams = uusi URLSearchParams(window.location.search);
+const currentDate = new Date();
+const day = nykyinenPäiväys.getDate();
+
+const Start = ["H7", "J6", "P9", "H8"];
+const End = ["BJ8", "C8Y", "PLOG", "C149"];
+
+anna paidKey = urlParams.get('paid_key');
+anna normalKey = urlParams.get('key');
+
+anna paidKeyExpirationTime = localStorage.getItem("maksettu_avain_vanheneminen");
+
+let isValidKey = false;
+
+if (paidKey && paidKey.endsWith("DONT_SHARE_WITH_ANYONE")) {
+    if (!paidKeyExpirationTime || parseInt(paidKeyExpirationTime) < currentDate.getTime()) {
+        localStorage.setItem("maksettu_avain", maksettuAvain);
+        maksettuKeyExpirationTime = currentDate.getTime() + (24 * 60 * 60 * 1000); // Aseta vanhenemisaika 24 tunniksi
+        localStorage.setItem("maksettu_avaimen_vanheneminen", maksettu avaimen vanhenemisaika);
+        isValidKey = tosi;
+    } muu {
+        isValidKey = tosi;
+    }
+} else if (localStorage.getItem("maksettu_avain") && parseInt(localStorage.getItem("paid_key_expiration")) >= currentDate.getTime()) {
+    isValidKey = tosi;
+} else if (normalKey) {
+    for (const startStr of Start) {
+        if (normalKey.startsWith(startStr)) {
+            for (const endStr of End) {
+                if (normalKey.endsWith(endStr)) {
+                    isValidKey = tosi;
+                    tauko;
+                }
+            }
+            tauko;
+        }
+    }
+} muu {
+    // Ohjaa uudelleen saadaksesi perusavaimen
+    hälytys(hälytysviesti); // Kehota vierailemaan sivulla saadaksesi perusavaimen
+    location.href = `https://dogescripts.pages.dev/games/?script=${location.hostname}`;
+    palata;
+}
+
+// Tarkista, onko maksettu avain vanhentunut
+if (isValidKey && parseInt(localStorage.getItem("paid_key_expiration")) < currentDate.getTime()) {
+    isValidKey = false;
+}
+
+if (isValidKey) {
+    showPopup(`Poista mainoksia tästä ${location.hostname}-skriptistä 24 tunnin ajan ilmaiseksi!`);
+    urlParams.delete("avain");
+    urlParams.delete("maksettu_avain");
+    historia.replaceState(null, null, "/" + urlParams.toString());
+    console.log('Kelvollinen avain');
+} muu {
+    alert("Maksullinen avaimesi on vanhentunut")
+    localStorage.removeItem("maksettu_avain_vanheneminen")
+    location.href = `https://dogescripts.pages.dev/games/?script=${location.hostname}`;
+    palata;
+}
+
+
+anna WorldScene;
+anna risteyksiä;
+anna DOGEWARE = ​​{
+    pelaaja: {
+        rautalanka: tosi,
+        opasiteetti: 1,
+        charmsColor: "#000000"
+    },
+    pyöritä: {
+        spinbot: false,
+        nopeus: 0,1
+        pyörimiskulma: 0
+    },
+    ESP: {
+        BoxESP: totta,
+        Viehätys: totta,
+        rautalanka: false,
+        kerros: 2,
+        opasiteetti: 0,3
+    },
+    Kamera: {
+        x: 0,
+        v: 0,
+        z: 0
+    },
+    aimbot: {
+        krunkAimbot: totta,
+        tasoituskerroin: 0,6,
+        AimOffset: 0,6,
+        kaukana: 100 000,
+    },
+}
+olkoon normit = {
+    salliTarget: tosi,
+    konsoli: console.log,
+    injektioaika: 3000
+}
+const origialArrayPush = Array.prototype.push
+const getMainScene = function(objekti) {
+    if(objekti && objekti.emo && objekti.vanhempi.tyyppi === "Kohtaus" && objekti.vanhemman.nimi === "Pääosa") {
+        WorldScene = objekti.parent;
+        norms.console (WorldScene)
+        Array.prototype.push = alkuperäinenArrayPush;
+    }
+    return originalArrayPush.apply(this, arguments);
+};
+
+const ESPMatrix = new THREE.EdgesGeometry(new THREE.BoxGeometry( 5, 13, 0.02 ).translate(0,5,0));
+
+const ESPMaterial = new THREE.RawShaderMaterial({
+    vertexShader: `
+        attribuutti vec3 sijainti;
+
+        yhtenäinen matto4 projektioMatriisi;
+        yhtenäinen matto4 malliViewMatrix;
+
+        void main() {
+            vec4 pos = projektioMatriisi * malliViewMatrix * vec4(sijainti, 1.0);
+            pos.z = 0,9999;
+            gl_Position = pos;
+        }
+    `,
+    fragmentShader: `
+        void main() {
+            gl_FragColor = vec4(1,0, 0,0, 0,0, 1,0);
+        }
+    `,
+    syvyystesti: epätosi,
+    deepWrite: false,
+    läpinäkyvä: totta
+});
+function HBO() {
+    requestAnimationFrame.call(window, HBO);
+    if(!WorldScene) {
+        window.setTimeout(() => {
+            Array.prototype.push = getMainScene;
+        }, norms.injectTime)
+    }
+    vakiokokonaisuudet = []
+    anna myController
+    anna PlayerTarget
+    anna RangeFactor = ääretön
+
+    WorldScene.children.forEach(lapsi => {
+        if(child.material)child.material.wireframe = DOGEWARE.ESP.wireframe
+        if(lapsi.tyyppi === 'Object3D') {
+            kokeile {
+                const Kamera = lapsi.lapset[0]?.lapset[0]
+                if(Camera && Camera.type === 'PerspectiveCamera') {
+                    myController = lapsi
+                } muu {
+                    entities.push(lapsi)
+                }
+            } saalis {}
+        }
+    });
+    if(!myController) {
+        Array.prototype.push = getMainScene
+        palata
+    }
+    function DoSpin(){
+        DOGEWARE.spin.spinAngle += DOGEWARE.spin.speed
+        const targetRotationY = DOGEWARE.spin.spinAngle % (Math.PI * 2)
+        myController.children[0].rotation.y += (targetRotationY - myController.children[0].rotation.y) * DOGEWARE.aimbot.smoothingFactor
+    }
+    entities.forEach(player => {
+        yrittää{
+            if(player.children[0].children[4].children[0].name === "head"){
+                const charmsColor = uusi THREE.Color(DOGEWARE.player.charmsColor);
+                const materiaali = pelaaja.lapset[0].lapset[0].materiaali
+                materiaali.läpinäkyvä = tosi
+                materiaali.sumu = false;
+                materiaali.väri.kopio(charmsColor);
+                materiaali.emissive.copy(charmsColor);
+                material.depthTest = DOGEWARE.ESP.Charms ? false : tosi;
+                material.depthWrite = false
+                material.wireframe = DOGEWARE.player.wireframe;
+                material.opacity = DOGEWARE.player.opacity;
+                const vertex = uusi THREE.LineSegments (ESPMatrix, ESPMterial)
+                if (!player.vertex) player.add(vertex)
+                vertex.frustumCulled = false
+                pelaaja.vertex = huippu;
+                player.vertex.visible = DOGEWARE.ESP.BoxESP
+                const { x: pelaajaX, z: pelaajaZ } = pelaaja.paikka;
+                const { x: controllerX, z: controllerZ } = myController.position;
+
+                if (soitinX !== ohjainX || pelaajaZ !== ohjainZ) {
+                    const dist = pelaaja.sijainti.etäisyys(myController.position)
+                    if(dist < RangeFactor) {
+                        PlayerTarget = pelaaja
+                        RangeFactor = dist
+                    }
+                }
+            }
+        }catch(e){}
+    });
+    if(DOGEWARE.spin.spinbot)DoSpin()
+    const Vector = uusi KOLME.Vektori3()
+    const HoldObject = uusi THREE.Object3D()
+    HoldObject.rotation.order = 'YXZ'
+    HoldObject.matrix.copy(myController.matrix).invert()
+    myController.children[0].position.set(DOGEWARE.Cam.x,DOGEWARE.Cam.y,DOGEWARE.Cam.z)
+    if( myController !== undefined && PlayerTarget !== undefined) {
+        if(DOGEWARE.aimbot.krunkAimbot){
+            yrittää{
+                const dist = PlayerTarget.position.distanceTo(myController.position)
+                Vector.setScalar(0)
+                PlayerTarget.children[0].children[4].children[0].localToWorld(Vektori)
+                HoldObject.position.copy(myController.position)
+                HoldObject.lookAt(Vector.x, Vector.y, Vector.z)
+
+                const targetRotationX = -HoldObject.rotation.x + DOGEWARE.aimbot.AimOffset / dist * 5
+                const targetRotationY = HoldObject.rotation.y + Math.PI
+                myController.children[0].rotation.x += (targetRotationX - myController.children[0].rotation.x) * DOGEWARE.aimbot.smoothingFactor
+                myController.rotation.y += (targetRotationY - myController.rotation.y) * DOGEWARE.aimbot.smoothingFactor
+
+            }saalis{}
+        }
+
+    } muu {}
+}
+function createMenuItem() {
+    const styleTag = document.createElement('tyyli')
+    styleTag.textContent = `
+        .menuItem1:hover img{
+          muunnos: asteikko(1.1);
+        }
+      `;
+    document.head.appendChild(styleTag)
+    const menuItemDiv = document.createElement('div')
+    menuItemDiv.classList.add('menuItem')
+    menuItemDiv.classList.add('menuItem1')
+    menuItemDiv.setAttribute('onmouseenter', 'playTick()');
+    menuItemDiv.setAttribute('onclick', 'playSelect()');
+    const iconSpan = document.createElement('span')
+    iconSpan.innerHTML = `<img src="https://media.giphy.com/media/CxYGmxv0Oyz4I/giphy.gif" width='60' height='60'>`
+    iconSpan.style.color = '#ff6a0b';
+    const titleDiv = document.createElement('div')
+    titleDiv.classList.add('menuItemTitle1')
+    titleDiv.classList.add('menuItemTitle')
+    titleDiv.id = 'menuBtnProfile';
+    titleDiv.style.fontSize = '18px';
+    titleDiv.textContent = 'CH3ATS';
+    menuItemDiv.addEventListener('click', openCheats)
+    menuItemDiv.appendChild(iconSpan);
+    menuItemDiv.appendChild(titleDiv);
+    const menuItemContainer = document.getElementById('menuItemContainer')
+    if(menuItemContainer) {
+        menuItemContainer.appendChild(menuItemDiv)
+    } muu {
+        alert('Virhe: #menuItemContaineria ei löydy.')
+    }
+}
+setTimeout(function() {
+    luoMenuItem()
+}, 700)
+anna Päivitä;
+
+fetch('https://raw.githubusercontent.com/SigmaMaleSnow/UpdateLogKrunker/main/Update.txt')
+    .then(response => {
+    if (response.ok) {
+        return response.text();
+    } muu {
+        throw new Error('Tietojen nouto epäonnistui');
+    }
+})
+    .then(data => {
+    Päivitys = tiedot;
+    console.log('Haettu tiedot:', Päivitä);
+})
+    .catch(error => {
+    console.error('Virhe:', virhe);
+});
+
+const style = document.createElement('tyyli');
+style.innerHTML = `
+/* Tumman teeman tyyli */
+
+
+#menuContainer *{
+    väri: #ffffff !tärkeää;
+        font-family: monospace !tärkeää;
+        kirjainväli: -0,5 pikseliä;
+}
+#menuContainer {
+taustaväri: #1a1a1a !tärkeää;
+    font-family: 'Segoe UI', Tahoma, Geneve, Verdana, sans-serif !tärkeää;
+    marginaali: 0 !tärkeää;
+    pehmuste: 0 !tärkeää;
+    asento: kiinteä !tärkeää;
+    alkuun: 50% !tärkeää;
+    vasen: 50% !tärkeää;
+    muunnos: translate(-50%, -50%) !tärkeää;
+    täyte: 20px !tärkeää;
+    border-radius: 10px !tärkeää;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !tärkeää;
+    z-indeksi: 1000 !tärkeää;
+    leveys: 345 pikseliä;
+}
+
+.menuHeaderText1 {
+    font-size: 20px !tärkeää;
+    text-align: center !tärkeää;
+    leveys: 170 pikseliä;
+}
+
+.menuItemTitle1 {
+    font-size: 18px !tärkeää;
+    animaatio: rgbAnimation 0.5s infinite alternate !tärkeää;
+}
+
+
+@keyframes rgbAnimation {
+    0 % { väri: rgb(255, 0, 0); }
+    25 % { väri: rgb(255, 255, 0); }
+    50 % { väri: rgb(0, 255, 0); }
+    75 % { väri: rgb(0, 255, 255); }
+    100 % { väri: rgb(255, 0, 255); }
+}
+
+.tab {
+    näyttö: flex;
+    perustele-sisältö: space-around;
+    väli: 8px;
+    marginaali-ala: 20px;
+}
+
+.tab-painike {
+    taustaväri: läpinäkyvä;
+    reuna: ei mitään;
+    täyte: 8px 12px;
+    fontin paino: 400;
+    ääriviivat: ei mitään;
+    väri: #ffffff;
+    kohdistin: osoitin;
+    siirtyminen: kaikki 0,3s helppous;
+}
+
+.tab-painike:hover,
+.tab button.active {
+    taustaväri: rgba(255, 255, 255, 0,2);
+    reunan säde: 5px;
+}
+
+.tabcontent {
+    näyttö: ei mitään;
+    marginaali-yläosa: 20px;
+}
+
+.tabcontent.active {
+    näyttö: lohko;
+}
+
+.dropdown-toggle {
+    ulkonäkö: ei mitään;
+    -webkit-ulkonäkö: ei mitään;
+    -moz-ulkonäkö: ei mitään;
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+    reuna: ei mitään;
+    marginaali yläreuna: 7px;
+    täyte: 13px;
+    reunan säde: 5px;
+    kohdistin: osoitin;
+    float: oikea 1;
+    margin-vasen: 139,8px !tärkeää;
+    reunus: 1px kiinteä #333333;
+    fontin paino: 400;
+    kääntää: 5px;
+    leveys: 90px;
+    korkeus: 50px;
+}
+
+.dropdown-toggle:focus {
+    ääriviivat: ei mitään;
+}
+
+.dropdown-toggle option {
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    taustaväri: #333333;
+}
+
+input[type="teksti"] {
+    leveys: 140 pikseliä;
+    täyte: 12px;
+    marginaali-ala: 10px;
+    reunan säde: 5px;
+    reunus: 1px kiinteä #333333;
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+    kellua: oikea;
+    marginaali vasen: 10px;
+    korkeus: 20px;
+    marginaali yläreuna: 7px;
+
+}
+
+/* Lisää luokka tarroille, jotta ne kellutetaan vasemmalle ja tehdään inline-block */
+.label-inline {
+kellua: vasen;
+    näyttö: inline-block;
+    leveys: 100 pikseliä;
+    marginaali-oikea: 10px;
+    marginaali yläreuna: 30px;
+    pehmuste: 0;
+    kirjasinkoko: 18,5 pikseliä;
+}
+.overlay {
+    asento: kiinteä !tärkeää;
+    alkuun: 0;
+    vasen: 0;
+    leveys: 100% !tärkeää;
+    korkeus: 100% !tärkeää;
+    taustaväri: rgba(0, 0, 0, 0.5) !tärkeää;
+    taustasuodatin: hämärtää (5px);
+    z-indeksi: 999 !tärkeää;
+    näyttö: ei mitään;
+}
+
+.overlay.show {
+    näyttö: lohko; /* Näytä peittokuva, kun valikko on näkyvissä */
+}
+.bg1{
+tausta: lineaarinen gradientti(oikealle, rgb(90, 100, 200), rgb(200, 90, 100));
+reunan säde: 3px;
+}
+.inlineNames{
+     näyttö: flex;
+    perustele-sisältö: space-around;
+    leveys: min-sisältö;
+    väli: 8px;
+}
+.inlineNames img{
+ esine-sovitus: kansi;
+ reunan säde: 10px;
+}
+`;
+document.head.appendLapsi(tyyli);
+
+const overlay = document.createElement('div');
+overlay.classList.add('overlay');
+document.body.appendChild(overlay);
+const-ilmoitus = document.createElement('div');
+notification.innerHTML = `
+<tyyli>
+
+  #ilmoitus {
+    asento: kiinteä;
+    yläosa: -300px;
+    jäljellä: 50 %;
+    muunnos: translateX(-50%);
+    taustaväri: #1a1a1a;
+    väri: #fff;
+    täyte: 15px;
+    reunan säde: 5px;
+    siirtyminen: alkuun 0,5 s helppous;
+    z-indeksi: 999999; /* Aseta z-indeksi mahdollisimman korkeaksi */
+    fonttikoko: 16px; /* Säädä kirjasinkokoa */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0,1); /* Lisää laatikon varjo syvyyttä varten */
+    leveys: 300px;
+  }
+
+  .notification-text * {
+    font-family: monospace !tärkeää;
+    marginaali-ala: 10px;
+    väri: #fff;
+  }
+  @keyframes slideWidth {
+    0 % {
+      leveys: 0 %;
+    }
+    100 % {
+      leveys: 100 %;
+    }
+  }
+  .slider-container {
+    marginaali yläreuna: 5px;
+    korkeus: 4px;
+    raja-säde: 0px;
+    animaatio: slideWidth 7.7s lineaarinen eteenpäin;
+    taustaväri: #ccc;
+    asema: suhteellinen;
+    ylivuoto: piilotettu;
+    siirtyminen: leveys 0,3s helppous;
+    tausta: lineaarinen gradientti(oikealle, rgb(90, 100, 200), rgb(100, 150, 200));
+
+  }
+
+</style>
+<div id="ilmoitus">
+  <div class="notification-text">
+  <h2 style="text-align: center; font-weight: 600px;">Päivitys 0.8:</h2>
+  <p id="dogeupdate">${Update}</p>
+  <h3 style="text-align: center; font-weight: 600px;">[O]PIILOTA VALIKKO</h3>
+  </div>
+  <div class="slider-container">
+  </div>
+</div>
+`;
+
+document.body.appendChild(ilmoitus);
+
+setTimeout(() => {
+    const ilmoitusDiv = document.getElementById("ilmoitus")
+
+    NotificationDiv.style.top = "20px"
+    setTimeout(() => {
+        NotificationDiv.style.top = "-1000px"
+    }, 8000)
+
+}, 500)
+setInterval(function(){
+    if(Update)document.getElementById('dogeupdate').innerHTML = Päivitä
+})
+
+const menuContainer = document.createElement('div');
+menuContainer.id = 'menuContainer';
+document.body.appendChild(menuContainer);
+const header = document.createElement('div')
+header.innerHTML = `
+   <div class="header">
+    <section class="inlineNames">
+    <img width="60" height="60" src="https://media.tenor.com/images/c51500433e6f6fff5a8c362335bc8242/tenor.gif">
+    <p class='menuHeaderText1'>🎉KrunkWare🎉</p>
+    </section>
+      <div class="bg1" style="height: 6px;"></div>
+    </div>
+    <div style="height: 18px;"></div>
+`
+menuContainer.appendChild(otsikko)
+function createTab(välilehdenNimi) {
+    const tabButton = document.createElement('button');
+    tabButton.textContent = välilehdenNimi.charAt(0).toUpperCase() + välilehdenNimi.slice(1);
+    tabButton.addEventListener('click', () => openTab(välilehdenNimi));
+    tabLinks.appendChild(tabButton);
+
+    const tabContent = document.createElement('div');
+    tabContent.classList.add('tabcontent');
+    menuContainer.appendChild(välilehtiContent);
+    välilehtiSisältö[välilehdenNimi] = välilehden Sisältö;
+
+    täytäTab(välilehdenNimi);
+}
+
+function populateTab(välilehdenNimi) {
+    const tabContent = välilehtiSisältö[välilehdenNimi];
+    const tabOptions = DOGEWARE[välilehdenNimi];
+    for (const option in tabOptions) {
+        if (typeof tabOptions[optio] !== 'objekti') {
+            const label = document.createElement('label');
+            label.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+            label.classList.add('label-inline');
+            välilehtiContent.appendChild(tunniste);
+
+            if (typeof tabOptions[optio] === 'boolean') {
+                const dropdownContainer = document.createElement('div');
+                dropdownContainer.classList.add('dropdown-container');
+
+                const dropdownButton = document.createElement('button');
+                dropdownButton.classList.add('dropdown-toggle');
+                dropdownButton.textContent = välilehtiOptions[optio] ? 'Enabled' : 'Ei käytössä';
+                dropdownButton.addEventListener('click', event => {
+                    tabOptions[optio] = !tabOptions[optio];
+                    dropdownButton.textContent = välilehtiOptions[optio] ? 'Enabled' : 'Ei käytössä';
+                    DOGEWARE[välilehdenNimi][optio] = välilehtiasetukset[optio];
+                });
+                dropdownContainer.appendChild(dropdownButton);
+
+                välilehtiContent.appendChild(dropdownContainer);
+            } muu {
+                const inputField = document.createElement('input');
+                inputField.type = 'teksti';
+                inputField.value = välilehtiOptions[optio];
+                inputField.classList.add('syöttökenttä');
+                inputField.addEventListener('input', event => {
+                    tabOptions[optio] = tapahtuma.kohde.arvo;
+                    DOGEWARE[välilehdenNimi][optio] = välilehtiasetukset[optio];
+                });
+                välilehtiContent.appendChild(syöttökenttä);
+            }
+            tabContent.appendChild(document.createElement('br'));
+        }
+    }
+}
+
+function openTab(välilehdenNimi) {
+    const tabs = document.querySelectorAll('.tabcontent');
+    tabs.forEach(tab => tab.classList.remove('aktiivinen'));
+    const tabButtons = document.querySelectorAll('.tab-painike');
+    tabButtons.forEach(tabButton => tabButton.classList.remove('active'));
+    const tabContent = välilehtiSisältö[välilehdenNimi];
+    tabContent.classList.add('active');
+    const tabButton = [...tabLinks.querySelectorAll('button')].find(button => button.textContent === tabName.charAt(0).toUpperCase() + tabName.slice(1));
+    tabButton.classList.add('active');
+}
+
+
+const tabLinks = document.createElement('div')
+tabLinks.classList.add('tab')
+menuContainer.appendCild(tabLinks)
+
+const tabContents = {}
+const tabNames = Object.keys (DOGEWARE)
+tabNames.forEach(tabName => {
+    luo välilehti(välilehden nimi)
+});
+openTab(välilehdenNimet[0]);
+anna firstOpen = false
+overlay.classList.add('show')
+
+
+setInterval(function(){
+    console.log(DOGEWARE)
+},2000)
+
+function openCheats() {
+    const displayStyle = menuContainer.style.display;
+    menuContainer.style.transition = 'opasiteetti 0,3 s helppous';
+    menuContainer.style.opacity = '0';
+
+    if (displayStyle === 'ei mitään') {
+        menuContainer.style.display = 'block';
+        setTimeout(() => {
+            menuContainer.style.opacity = '1';
+            overlay.classList.add('show')
+        }, 10);
+    } muu {
+        menuContainer.style.opacity = '0';
+        setTimeout(() => {
+            menuContainer.style.display = 'ei mitään';
+            overlay.classList.remove('show')
+        }, 300);
+    }
+
+    if (!firstOpen) {
+        window.open('https://dogescripts.pages.dev/games/promo-page', '_blank');
+        firstOpen = tosi;
+    }
+}
+
+document.addEventListener('keydown', function(event) {
+    if(tapahtuma.avainkoodi === 79) {
+        openCheats()
+    }
+});
+function alertEveryThreeMinutes() {
+    setInterval(function() {
+        window.open('https://dogescripts.pages.dev/games/promo-page', '_blank');
+    }, 4 * 60 * 1000);
+}
+alertEveryThreeMinutes();
+HBO()// ==UserScript==
+// @nimi KRUNKER.IO AIMBOT, XRAY, SPINBOT, WIREFRAME, FOV BOX JA 3. PERSONA DOGEWARE:lta
+// @namespace http://tampermonkey.net/
+// @versio 1.3
+// @description Krunkerin Mod Menu Aimbot tähtää lähimpään NÄKYVÄÄN pelaajaan. Säädä tasoitus tarkkuutta varten. Käytä Xraytä nähdäksesi seinien läpi, teräsrunkoa pelaajille ja maailmalle ja paljon muuta
+// @author DOGEWARE
+// @match *://krunker.io/*
+// @match *://browserfps.com/*
+// @sulje pois *://krunker.io/social*
+// @exclude *://krunker.io/editor*
+// @icon https://media.giphy.com/media/CxYGmxv0Oyz4I/giphy.gif
+// @grant none
+// @require https://unpkg.com/three@0.150.0/build/three.min.js
+// @antifeature-mainokset
+// @downloadURL https://update.greasyfork.org/scripts/491124/KRUNKERIO%20AIMBOT%2C%20XRAY%2C%20SPINBOT%2C%20WIREFRAME%2C%20FOV%20BOX%2C%20AND%203RD%2 20DOGEWARE.user.js
+// @updateURL https://update.greasyfork.org/scripts/491124/KRUNKERIO%20AIMBOT%2C%20XRAY%2C%20SPINBOT%2C%20WIREFRAME%2C%20FOV%20BOX%2C%20AND%BY%203%0 20DOGEWARE.meta.js
+// ==/UserScript==
+
+const KOLME = window.THREE;
+function showPopup(viesti) {
+    var popupContainer = document.createElement('div')
+    popupContainer.style.position = 'korjattu'
+    popupContainer.style.top = '0'
+    popupContainer.style.left = '0'
+    popupContainer.style.width = '100 %'
+    popupContainer.style.backgroundColor = '#333'
+    popupContainer.style.color = '#fff'
+    popupContainer.style.padding = '10px'
+    popupContainer.style.textAlign = 'keskus'
+    popupContainer.style.zIndex = '9999'
+
+    var textElement = document.createElement('div')
+    textElement.textContent = viesti
+    textElement.style.fontSize = '18px'
+    textElement.style.color = '#fff'
+    textElement.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+
+    var buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'inline-block';
+
+    var button1 = document.createElement('button');
+    button1.textContent = 'Hanki 24 tunnin avain';
+    button1.style.padding = '5px 10px';
+    button1.style.backgroundColor = '#ff6600';
+    button1.style.border = 'ei mitään';
+    button1.style.borderRadius = '5px';
+    button1.style.color = '#fff';
+    button1.style.cursor = 'osoitin';
+    button1.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+    buttonContainer.appendCild(painike1);
+    button1.addEventListener('click', function() {
+        window.open("https://dogescripts.pages.dev/script/key-unlock?script4key=krunker.io&reviewscript=491124-krunker-io-aimbot-xray-spinbot-wireframe-fov-box-and-3rd-person -by-dogeware");
+    });
+    var closeButton = document.createElement('button');
+    closeButton.textContent = 'Sulje';
+    closeButton.style.padding = '5px 10px';
+    closeButton.style.backgroundColor = '#ff6600';
+    closeButton.style.border = 'ei mitään';
+    closeButton.style.borderRadius = '5px';
+    closeButton.style.color = '#fff';
+    closeButton.style.cursor = 'osoitin';
+    closeButton.style.marginLeft = '10px';
+    closeButton.style.fontFamily = '"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif';
+
+    closeButton.addEventListener('click', function() {
+        document.body.removeChild(popupContainer);
+    });
+
+    popupContainer.appendChild(textElement);
+    popupContainer.appendChild(buttonContainer);
+    popupContainer.appendChild(closeButton);
+
+    document.body.appendChild(popupContainer);
+}
+
+const alertMsg = `
+🚀 On aika ottaa virtaa! 🚀
+
+Huomio! 📣 Tämän skriptin käyttö edellyttää nyt ainutlaatuista lisenssiavaimemme aktivointia varten. 🛡️ Varmista omasi nyt käymällä virallisella sivullamme osoitteessa dogescripts.pages.dev. Se on nopeaa ja helppoa, vie vain muutaman sekunnin. Muista, että tämä prosessi on suoritettava noin kahdesti päivässä, jotta asiat sujuvat sujuvasti. Nostetaan tasoa yhdessä! 💪
+
+🫷 Mainokset onClick (Popunder) Jos sinut ohjataan uudelleen, sulje sivu👍
+`;
+
+const urlParams = uusi URLSearchParams(window.location.search);
+const currentDate = new Date();
+const day = nykyinenPäiväys.getDate();
+
+const Start = ["H7", "J6", "P9", "H8"];
+const End = ["BJ8", "C8Y", "PLOG", "C149"];
+
+anna paidKey = urlParams.get('paid_key');
+anna normalKey = urlParams.get('key');
+
+anna paidKeyExpirationTime = localStorage.getItem("maksettu_avain_vanheneminen");
+
+let isValidKey = false;
+
+if (paidKey && paidKey.endsWith("DONT_SHARE_WITH_ANYONE")) {
+    if (!paidKeyExpirationTime || parseInt(paidKeyExpirationTime) < currentDate.getTime()) {
+        localStorage.setItem("maksettu_avain", maksettuAvain);
+        maksettuKeyExpirationTime = currentDate.getTime() + (24 * 60 * 60 * 1000); // Aseta vanhenemisaika 24 tunniksi
+        localStorage.setItem("maksettu_avaimen_vanheneminen", maksettu avaimen vanhenemisaika);
+        isValidKey = tosi;
+    } muu {
+        isValidKey = tosi;
+    }
+} else if (localStorage.getItem("maksettu_avain") && parseInt(localStorage.getItem("paid_key_expiration")) >= currentDate.getTime()) {
+    isValidKey = tosi;
+} else if (normalKey) {
+    for (const startStr of Start) {
+        if (normalKey.startsWith(startStr)) {
+            for (const endStr of End) {
+                if (normalKey.endsWith(endStr)) {
+                    isValidKey = tosi;
+                    tauko;
+                }
+            }
+            tauko;
+        }
+    }
+} muu {
+    // Ohjaa uudelleen saadaksesi perusavaimen
+    hälytys(hälytysviesti); // Kehota vierailemaan sivulla saadaksesi perusavaimen
+    location.href = `https://dogescripts.pages.dev/games/?script=${location.hostname}`;
+    palata;
+}
+
+// Tarkista, onko maksettu avain vanhentunut
+if (isValidKey && parseInt(localStorage.getItem("paid_key_expiration")) < currentDate.getTime()) {
+    isValidKey = false;
+}
+
+if (isValidKey) {
+    showPopup(`Poista mainoksia tästä ${location.hostname}-skriptistä 24 tunnin ajan ilmaiseksi!`);
+    urlParams.delete("avain");
+    urlParams.delete("maksettu_avain");
+    historia.replaceState(null, null, "/" + urlParams.toString());
+    console.log('Kelvollinen avain');
+} muu {
+    alert("Maksullinen avaimesi on vanhentunut")
+    localStorage.removeItem("maksettu_avain_vanheneminen")
+    location.href = `https://dogescripts.pages.dev/games/?script=${location.hostname}`;
+    palata;
+}
+
+
+anna WorldScene;
+anna risteyksiä;
+anna DOGEWARE = ​​{
+    pelaaja: {
+        rautalanka: tosi,
+        opasiteetti: 1,
+        charmsColor: "#000000"
+    },
+    pyöritä: {
+        spinbot: false,
+        nopeus: 0,1
+        pyörimiskulma: 0
+    },
+    ESP: {
+        BoxESP: totta,
+        Viehätys: totta,
+        rautalanka: false,
+        kerros: 2,
+        opasiteetti: 0,3
+    },
+    Kamera: {
+        x: 0,
+        v: 0,
+        z: 0
+    },
+    aimbot: {
+        krunkAimbot: totta,
+        tasoituskerroin: 0,6,
+        AimOffset: 0,6,
+        kaukana: 100 000,
+    },
+}
+olkoon normit = {
+    salliTarget: tosi,
+    konsoli: console.log,
+    injektioaika: 3000
+}
+const origialArrayPush = Array.prototype.push
+const getMainScene = function(objekti) {
+    if(objekti && objekti.emo && objekti.vanhempi.tyyppi === "Kohtaus" && objekti.vanhemman.nimi === "Pääosa") {
+        WorldScene = objekti.parent;
+        norms.console (WorldScene)
+        Array.prototype.push = alkuperäinenArrayPush;
+    }
+    return originalArrayPush.apply(this, arguments);
+};
+
+const ESPMatrix = new THREE.EdgesGeometry(new THREE.BoxGeometry( 5, 13, 0.02 ).translate(0,5,0));
+
+const ESPMaterial = new THREE.RawShaderMaterial({
+    vertexShader: `
+        attribuutti vec3 sijainti;
+
+        yhtenäinen matto4 projektioMatriisi;
+        yhtenäinen matto4 malliViewMatrix;
+
+        void main() {
+            vec4 pos = projektioMatriisi * malliViewMatrix * vec4(sijainti, 1.0);
+            pos.z = 0,9999;
+            gl_Position = pos;
+        }
+    `,
+    fragmentShader: `
+        void main() {
+            gl_FragColor = vec4(1,0, 0,0, 0,0, 1,0);
+        }
+    `,
+    syvyystesti: epätosi,
+    deepWrite: false,
+    läpinäkyvä: totta
+});
+function HBO() {
+    requestAnimationFrame.call(window, HBO);
+    if(!WorldScene) {
+        window.setTimeout(() => {
+            Array.prototype.push = getMainScene;
+        }, norms.injectTime)
+    }
+    vakiokokonaisuudet = []
+    anna myController
+    anna PlayerTarget
+    anna RangeFactor = ääretön
+
+    WorldScene.children.forEach(lapsi => {
+        if(child.material)child.material.wireframe = DOGEWARE.ESP.wireframe
+        if(lapsi.tyyppi === 'Object3D') {
+            kokeile {
+                const Kamera = lapsi.lapset[0]?.lapset[0]
+                if(Camera && Camera.type === 'PerspectiveCamera') {
+                    myController = lapsi
+                } muu {
+                    entities.push(lapsi)
+                }
+            } saalis {}
+        }
+    });
+    if(!myController) {
+        Array.prototype.push = getMainScene
+        palata
+    }
+    function DoSpin(){
+        DOGEWARE.spin.spinAngle += DOGEWARE.spin.speed
+        const targetRotationY = DOGEWARE.spin.spinAngle % (Math.PI * 2)
+        myController.children[0].rotation.y += (targetRotationY - myController.children[0].rotation.y) * DOGEWARE.aimbot.smoothingFactor
+    }
+    entities.forEach(player => {
+        yrittää{
+            if(player.children[0].children[4].children[0].name === "head"){
+                const charmsColor = uusi THREE.Color(DOGEWARE.player.charmsColor);
+                const materiaali = pelaaja.lapset[0].lapset[0].materiaali
+                materiaali.läpinäkyvä = tosi
+                materiaali.sumu = false;
+                materiaali.väri.kopio(charmsColor);
+                materiaali.emissive.copy(charmsColor);
+                material.depthTest = DOGEWARE.ESP.Charms ? false : tosi;
+                material.depthWrite = false
+                material.wireframe = DOGEWARE.player.wireframe;
+                material.opacity = DOGEWARE.player.opacity;
+                const vertex = uusi THREE.LineSegments (ESPMatrix, ESPMterial)
+                if (!player.vertex) player.add(vertex)
+                vertex.frustumCulled = false
+                pelaaja.vertex = huippu;
+                player.vertex.visible = DOGEWARE.ESP.BoxESP
+                const { x: pelaajaX, z: pelaajaZ } = pelaaja.paikka;
+                const { x: controllerX, z: controllerZ } = myController.position;
+
+                if (soitinX !== ohjainX || pelaajaZ !== ohjainZ) {
+                    const dist = pelaaja.sijainti.etäisyys(myController.position)
+                    if(dist < RangeFactor) {
+                        PlayerTarget = pelaaja
+                        RangeFactor = dist
+                    }
+                }
+            }
+        }catch(e){}
+    });
+    if(DOGEWARE.spin.spinbot)DoSpin()
+    const Vector = uusi KOLME.Vektori3()
+    const HoldObject = uusi THREE.Object3D()
+    HoldObject.rotation.order = 'YXZ'
+    HoldObject.matrix.copy(myController.matrix).invert()
+    myController.children[0].position.set(DOGEWARE.Cam.x,DOGEWARE.Cam.y,DOGEWARE.Cam.z)
+    if( myController !== undefined && PlayerTarget !== undefined) {
+        if(DOGEWARE.aimbot.krunkAimbot){
+            yrittää{
+                const dist = PlayerTarget.position.distanceTo(myController.position)
+                Vector.setScalar(0)
+                PlayerTarget.children[0].children[4].children[0].localToWorld(Vektori)
+                HoldObject.position.copy(myController.position)
+                HoldObject.lookAt(Vector.x, Vector.y, Vector.z)
+
+                const targetRotationX = -HoldObject.rotation.x + DOGEWARE.aimbot.AimOffset / dist * 5
+                const targetRotationY = HoldObject.rotation.y + Math.PI
+                myController.children[0].rotation.x += (targetRotationX - myController.children[0].rotation.x) * DOGEWARE.aimbot.smoothingFactor
+                myController.rotation.y += (targetRotationY - myController.rotation.y) * DOGEWARE.aimbot.smoothingFactor
+
+            }saalis{}
+        }
+
+    } muu {}
+}
+function createMenuItem() {
+    const styleTag = document.createElement('tyyli')
+    styleTag.textContent = `
+        .menuItem1:hover img{
+          muunnos: asteikko(1.1);
+        }
+      `;
+    document.head.appendChild(styleTag)
+    const menuItemDiv = document.createElement('div')
+    menuItemDiv.classList.add('menuItem')
+    menuItemDiv.classList.add('menuItem1')
+    menuItemDiv.setAttribute('onmouseenter', 'playTick()');
+    menuItemDiv.setAttribute('onclick', 'playSelect()');
+    const iconSpan = document.createElement('span')
+    iconSpan.innerHTML = `<img src="https://media.giphy.com/media/CxYGmxv0Oyz4I/giphy.gif" width='60' height='60'>`
+    iconSpan.style.color = '#ff6a0b';
+    const titleDiv = document.createElement('div')
+    titleDiv.classList.add('menuItemTitle1')
+    titleDiv.classList.add('menuItemTitle')
+    titleDiv.id = 'menuBtnProfile';
+    titleDiv.style.fontSize = '18px';
+    titleDiv.textContent = 'CH3ATS';
+    menuItemDiv.addEventListener('click', openCheats)
+    menuItemDiv.appendChild(iconSpan);
+    menuItemDiv.appendChild(titleDiv);
+    const menuItemContainer = document.getElementById('menuItemContainer')
+    if(menuItemContainer) {
+        menuItemContainer.appendChild(menuItemDiv)
+    } muu {
+        alert('Virhe: #menuItemContaineria ei löydy.')
+    }
+}
+setTimeout(function() {
+    luoMenuItem()
+}, 700)
+anna Päivitä;
+
+fetch('https://raw.githubusercontent.com/SigmaMaleSnow/UpdateLogKrunker/main/Update.txt')
+    .then(response => {
+    if (response.ok) {
+        return response.text();
+    } muu {
+        throw new Error('Tietojen nouto epäonnistui');
+    }
+})
+    .then(data => {
+    Päivitys = tiedot;
+    console.log('Haettu tiedot:', Päivitä);
+})
+    .catch(error => {
+    console.error('Virhe:', virhe);
+});
+
+const style = document.createElement('tyyli');
+style.innerHTML = `
+/* Tumman teeman tyyli */
+
+
+#menuContainer *{
+    väri: #ffffff !tärkeää;
+        font-family: monospace !tärkeää;
+        kirjainväli: -0,5 pikseliä;
+}
+#menuContainer {
+taustaväri: #1a1a1a !tärkeää;
+    font-family: 'Segoe UI', Tahoma, Geneve, Verdana, sans-serif !tärkeää;
+    marginaali: 0 !tärkeää;
+    pehmuste: 0 !tärkeää;
+    asento: kiinteä !tärkeää;
+    alkuun: 50% !tärkeää;
+    vasen: 50% !tärkeää;
+    muunnos: translate(-50%, -50%) !tärkeää;
+    täyte: 20px !tärkeää;
+    border-radius: 10px !tärkeää;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !tärkeää;
+    z-indeksi: 1000 !tärkeää;
+    leveys: 345 pikseliä;
+}
+
+.menuHeaderText1 {
+    font-size: 20px !tärkeää;
+    text-align: center !tärkeää;
+    leveys: 170 pikseliä;
+}
+
+.menuItemTitle1 {
+    font-size: 18px !tärkeää;
+    animaatio: rgbAnimation 0.5s infinite alternate !tärkeää;
+}
+
+
+@keyframes rgbAnimation {
+    0 % { väri: rgb(255, 0, 0); }
+    25 % { väri: rgb(255, 255, 0); }
+    50 % { väri: rgb(0, 255, 0); }
+    75 % { väri: rgb(0, 255, 255); }
+    100 % { väri: rgb(255, 0, 255); }
+}
+
+.tab {
+    näyttö: flex;
+    perustele-sisältö: space-around;
+    väli: 8px;
+    marginaali-ala: 20px;
+}
+
+.tab-painike {
+    taustaväri: läpinäkyvä;
+    reuna: ei mitään;
+    täyte: 8px 12px;
+    fontin paino: 400;
+    ääriviivat: ei mitään;
+    väri: #ffffff;
+    kohdistin: osoitin;
+    siirtyminen: kaikki 0,3s helppous;
+}
+
+.tab-painike:hover,
+.tab button.active {
+    taustaväri: rgba(255, 255, 255, 0,2);
+    reunan säde: 5px;
+}
+
+.tabcontent {
+    näyttö: ei mitään;
+    marginaali-yläosa: 20px;
+}
+
+.tabcontent.active {
+    näyttö: lohko;
+}
+
+.dropdown-toggle {
+    ulkonäkö: ei mitään;
+    -webkit-ulkonäkö: ei mitään;
+    -moz-ulkonäkö: ei mitään;
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+    reuna: ei mitään;
+    marginaali yläreuna: 7px;
+    täyte: 13px;
+    reunan säde: 5px;
+    kohdistin: osoitin;
+    float: oikea 1;
+    margin-vasen: 139,8px !tärkeää;
+    reunus: 1px kiinteä #333333;
+    fontin paino: 400;
+    kääntää: 5px;
+    leveys: 90px;
+    korkeus: 50px;
+}
+
+.dropdown-toggle:focus {
+    ääriviivat: ei mitään;
+}
+
+.dropdown-toggle option {
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    taustaväri: #333333;
+}
+
+input[type="teksti"] {
+    leveys: 140 pikseliä;
+    täyte: 12px;
+    marginaali-ala: 10px;
+    reunan säde: 5px;
+    reunus: 1px kiinteä #333333;
+    taustaväri: #1f1f1f;
+    väri: #ffffff;
+    kellua: oikea;
+    marginaali vasen: 10px;
+    korkeus: 20px;
+    marginaali yläreuna: 7px;
+
+}
+
+/* Lisää luokka tarroille, jotta ne kellutetaan vasemmalle ja tehdään inline-block */
+.label-inline {
+kellua: vasen;
+    näyttö: inline-block;
+    leveys: 100 pikseliä;
+    marginaali-oikea: 10px;
+    marginaali yläreuna: 30px;
+    pehmuste: 0;
+    kirjasinkoko: 18,5 pikseliä;
+}
+.overlay {
+    asento: kiinteä !tärkeää;
+    alkuun: 0;
+    vasen: 0;
+    leveys: 100% !tärkeää;
+    korkeus: 100% !tärkeää;
+    taustaväri: rgba(0, 0, 0, 0.5) !tärkeää;
+    taustasuodatin: hämärtää (5px);
+    z-indeksi: 999 !tärkeää;
+    näyttö: ei mitään;
+}
+
+.overlay.show {
+    näyttö: lohko; /* Näytä peittokuva, kun valikko on näkyvissä */
+}
+.bg1{
+tausta: lineaarinen gradientti(oikealle, rgb(90, 100, 200), rgb(200, 90, 100));
+reunan säde: 3px;
+}
+.inlineNames{
+     näyttö: flex;
+    perustele-sisältö: space-around;
+    leveys: min-sisältö;
+    väli: 8px;
+}
+.inlineNames img{
+ esine-sovitus: kansi;
+ reunan säde: 10px;
+}
+`;
+document.head.appendLapsi(tyyli);
+
+const overlay = document.createElement('div');
+overlay.classList.add('overlay');
+document.body.appendChild(overlay);
+const-ilmoitus = document.createElement('div');
+notification.innerHTML = `
+<tyyli>
+
+  #ilmoitus {
+    asento: kiinteä;
+    yläosa: -300px;
+    jäljellä: 50 %;
+    muunnos: translateX(-50%);
+    taustaväri: #1a1a1a;
+    väri: #fff;
+    täyte: 15px;
+    reunan säde: 5px;
+    siirtyminen: alkuun 0,5 s helppous;
+    z-indeksi: 999999; /* Aseta z-indeksi mahdollisimman korkeaksi */
+    fonttikoko: 16px; /* Säädä kirjasinkokoa */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0,1); /* Lisää laatikon varjo syvyyttä varten */
+    leveys: 300px;
+  }
+
+  .notification-text * {
+    font-family: monospace !tärkeää;
+    marginaali-ala: 10px;
+    väri: #fff;
+  }
+  @keyframes slideWidth {
+    0 % {
+      leveys: 0 %;
+    }
+    100 % {
+      leveys: 100 %;
+    }
+  }
+  .slider-container {
+    marginaali yläreuna: 5px;
+    korkeus: 4px;
+    raja-säde: 0px;
+    animaatio: slideWidth 7.7s lineaarinen eteenpäin;
+    taustaväri: #ccc;
+    asema: suhteellinen;
+    ylivuoto: piilotettu;
+    siirtyminen: leveys 0,3s helppous;
+    tausta: lineaarinen gradientti(oikealle, rgb(90, 100, 200), rgb(100, 150, 200));
+
+  }
+
+</style>
+<div id="ilmoitus">
+  <div class="notification-text">
+  <h2 style="text-align: center; font-weight: 600px;">Päivitys 0.8:</h2>
+  <p id="dogeupdate">${Update}</p>
+  <h3 style="text-align: center; font-weight: 600px;">[O]PIILOTA VALIKKO</h3>
+  </div>
+  <div class="slider-container">
+  </div>
+</div>
+`;
+
+document.body.appendChild(ilmoitus);
+
+setTimeout(() => {
+    const ilmoitusDiv = document.getElementById("ilmoitus")
+
+    NotificationDiv.style.top = "20px"
+    setTimeout(() => {
+        NotificationDiv.style.top = "-1000px"
+    }, 8000)
+
+}, 500)
+setInterval(function(){
+    if(Update)document.getElementById('dogeupdate').innerHTML = Päivitä
+})
+
+const menuContainer = document.createElement('div');
+menuContainer.id = 'menuContainer';
+document.body.appendChild(menuContainer);
+const header = document.createElement('div')
+header.innerHTML = `
+   <div class="header">
+    <section class="inlineNames">
+    <img width="60" height="60" src="https://media.tenor.com/images/c51500433e6f6fff5a8c362335bc8242/tenor.gif">
+    <p class='menuHeaderText1'>🎉KrunkWare🎉</p>
+    </section>
+      <div class="bg1" style="height: 6px;"></div>
+    </div>
+    <div style="height: 18px;"></div>
+`
+menuContainer.appendChild(otsikko)
+function createTab(välilehdenNimi) {
+    const tabButton = document.createElement('button');
+    tabButton.textContent = välilehdenNimi.charAt(0).toUpperCase() + välilehdenNimi.slice(1);
+    tabButton.addEventListener('click', () => openTab(välilehdenNimi));
+    tabLinks.appendChild(tabButton);
+
+    const tabContent = document.createElement('div');
+    tabContent.classList.add('tabcontent');
+    menuContainer.appendChild(välilehtiContent);
+    välilehtiSisältö[välilehdenNimi] = välilehden Sisältö;
+
+    täytäTab(välilehdenNimi);
+}
+
+function populateTab(välilehdenNimi) {
+    const tabContent = välilehtiSisältö[välilehdenNimi];
+    const tabOptions = DOGEWARE[välilehdenNimi];
+    for (const option in tabOptions) {
+        if (typeof tabOptions[optio] !== 'objekti') {
+            const label = document.createElement('label');
+            label.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+            label.classList.add('label-inline');
+            välilehtiContent.appendChild(tunniste);
+
+            if (typeof tabOptions[optio] === 'boolean') {
+                const dropdownContainer = document.createElement('div');
+                dropdownContainer.classList.add('dropdown-container');
+
+                const dropdownButton = document.createElement('button');
+                dropdownButton.classList.add('dropdown-toggle');
+                dropdownButton.textContent = välilehtiOptions[optio] ? 'Enabled' : 'Ei käytössä';
+                dropdownButton.addEventListener('click', event => {
+                    tabOptions[optio] = !tabOptions[optio];
+                    dropdownButton.textContent = välilehtiOptions[optio] ? 'Enabled' : 'Ei käytössä';
+                    DOGEWARE[välilehdenNimi][optio] = välilehtiasetukset[optio];
+                });
+                dropdownContainer.appendChild(dropdownButton);
+
+                välilehtiContent.appendChild(dropdownContainer);
+            } muu {
+                const inputField = document.createElement('input');
+                inputField.type = 'teksti';
+                inputField.value = välilehtiOptions[optio];
+                inputField.classList.add('syöttökenttä');
+                inputField.addEventListener('input', event => {
+                    tabOptions[optio] = tapahtuma.kohde.arvo;
+                    DOGEWARE[välilehdenNimi][optio] = välilehtiasetukset[optio];
+                });
+                välilehtiContent.appendChild(syöttökenttä);
+            }
+            tabContent.appendChild(document.createElement('br'));
+        }
+    }
+}
+
+function openTab(välilehdenNimi) {
+    const tabs = document.querySelectorAll('.tabcontent');
+    tabs.forEach(tab => tab.classList.remove('aktiivinen'));
+    const tabButtons = document.querySelectorAll('.tab-painike');
+    tabButtons.forEach(tabButton => tabButton.classList.remove('active'));
+    const tabContent = välilehtiSisältö[välilehdenNimi];
+    tabContent.classList.add('active');
+    const tabButton = [...tabLinks.querySelectorAll('button')].find(button => button.textContent === tabName.charAt(0).toUpperCase() + tabName.slice(1));
+    tabButton.classList.add('active');
+}
+
+
+const tabLinks = document.createElement('div')
+tabLinks.classList.add('tab')
+menuContainer.appendCild(tabLinks)
+
+const tabContents = {}
+const tabNames = Object.keys (DOGEWARE)
+tabNames.forEach(tabName => {
+    luo välilehti(välilehden nimi)
+});
+openTab(välilehdenNimet[0]);
+anna firstOpen = false
+overlay.classList.add('show')
+
+
+setInterval(function(){
+    console.log(DOGEWARE)
+},2000)
+
+function openCheats() {
+    const displayStyle = menuContainer.style.display;
+    menuContainer.style.transition = 'opasiteetti 0,3 s helppous';
+    menuContainer.style.opacity = '0';
+
+    if (displayStyle === 'ei mitään') {
+        menuContainer.style.display = 'block';
+        setTimeout(() => {
+            menuContainer.style.opacity = '1';
+            overlay.classList.add('show')
+        }, 10);
+    } muu {
+        menuContainer.style.opacity = '0';
+        setTimeout(() => {
+            menuContainer.style.display = 'ei mitään';
+            overlay.classList.remove('show')
+        }, 300);
+    }
+
+    if (!firstOpen) {
+        window.open('https://dogescripts.pages.dev/games/promo-page', '_blank');
+        firstOpen = tosi;
+    }
+}
+
+document.addEventListener('keydown', function(event) {
+    if(tapahtuma.avainkoodi === 79) {
+        openCheats()
+    }
+});
+function alertEveryThreeMinutes() {
+    setInterval(function() {
+        window.open('https://dogescripts.pages.dev/games/promo-page', '_blank');
+    }, 4 * 60 * 1000);
+}
+alertEveryThreeMinutes();
+HBO() MIKSI eemt
